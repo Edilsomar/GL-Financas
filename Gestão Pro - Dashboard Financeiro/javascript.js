@@ -37,7 +37,9 @@ function enviar() {
         btnX.innerText = 'X';
         btnX.addEventListener('click', () => {
             linhaTabela.remove();
-
+            valorTotal()
+            entradasTotais()
+            saidasTotais()
         });
     
         //Ternario para valor positivo ou negativo com cor

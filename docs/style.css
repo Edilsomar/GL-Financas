@@ -14,14 +14,14 @@ body{
     min-height: 100vh;
 }
 main{
-    position: relative;
-    height: 100vh;
-    width: 100vw;
+    height: 100%;
+    width: 80%;
+    margin: auto;
 }
 .apresentacao{
-    position: absolute;
-    left: 150px;
-    top: 100px; 
+   display: inline-block;
+   margin: 20px ;
+  
 }
 .apresentacao h1{
   font-family: 'Poppins', sans-serif; /* Use a fonte da imagem ou uma semelhante */
@@ -44,58 +44,16 @@ main{
   color: #e0e0e0; 
   letter-spacing: 2px;
 }
-/*projetos*/
-.projetos{
-    position: absolute;
-    display: flex;
-    gap: 25px;
-    bottom: 120px;
-    left: 53%;
-    transform: translateX(-50%);
-    
-}
-.projeto1, .projeto2{
-    transition-duration: 1s;
-}
-.projeto1:hover, .projeto2:hover{
-    transform: scale(1.1); 
-}
-.projetos .tituloProjeto{
-    color: #a3d8ff;
-    font-size: 1.3rem;
-    font-family: 'Poppins', sans-serif;
-    text-align: center;
-    padding-bottom: 3px;
-}
-.projetos .imgP{
-    background-color: rgba(255, 255, 255, 0.486);
-    width: 230px;
-    height: 120px;
-    border-radius: 10px;
-    border: 1px solid white;
-}
-.projetos .nomeProjeto {
-    font-family: 'Poppins', sans-serif;
-    font-weight: 500;
-    text-align: center;
-}
-.projetos .nomeProjeto a{
-    text-decoration: none;
-    color: #c6f2ff;
-
-}
 /*linguagens*/
 .linguagens{
     display: flex;
+    flex-wrap: wrap;
     gap: 15px;
-    position: absolute;
-    top: 20px;
-    right: 60px;
     text-align: center;
     height: 200px;
-    justify-content:center;
-    align-items: center;
     transition-duration: 1s;
+    justify-content: end;
+    margin:20px;
 }
 .html{
     margin-top: 20px;
@@ -115,20 +73,63 @@ main{
     transform: scale(1.2);
     box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
     border-radius: 10px;
-}
-/*Frase*/
-.fraseDeEfeito{
-    position: absolute;
-    bottom: 20px;
-    right: 60px;
-}
-.fraseDeEfeito h3{
-    color: #5ec8fd;
-    font-size: 1.7rem;
-    padding-bottom: 4px;
-    border-bottom: 2px solid;
-    border-image-source: linear-gradient(to left, #c29e00 30%, rgba(255, 255, 255, 0.486), transparent); 
-    border-image-slice: 1;
-}
 
+}
+/*projetos*/
+.projetos{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 25px; 
+    justify-content: center;
+    margin: 20px;
+}
+.projeto1, .projeto2{
+    transition-duration: 1s;
+}
+.projeto1:hover, .projeto2:hover{
+    transform: scale(1.1); 
+}
+.projetos .tituloProjeto{
+    color: #a3d8ff;
+    font-size: 1.3rem;
+    font-family: 'Poppins', sans-serif;
+    text-align: center;
+    padding-bottom: 3px;
+}
+.projetos .imgP{
+    background-color: rgba(255, 255, 255, 0.486);
+    width: 230px;
+    height: 130px;
+    border-radius: 10px;
+    border: 1px solid white;
+}
+.projetos .nomeProjeto {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 500;
+    text-align: center;
+}
+.projetos .nomeProjeto a{
+    text-decoration: none;
+    color: #c6f2ff;
+}
+.contato{
+    display: flex;
+    justify-content: end;
+    margin: 20px 0px 0px 0px;
+}
+@media(max-width: 1050px){
+    .apresentacao, .linguagens, .projetos, .contato{
+        justify-content: center;
+    }
+    .projetos{
+        gap: 10px;
+    }
+    .linguagens{
+        height: 150px;
+        justify-content: center;
+    }
+    .imghtml, .imgcss, .imgjs{
+        width: 80px;
+    }
 
+}

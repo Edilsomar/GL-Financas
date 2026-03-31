@@ -1,0 +1,134 @@
+*{ /*para PC*/
+    padding: 0px;
+    margin: 0px;
+    box-sizing: border-box;
+    color: #fff;
+    font-family: Arial, Helvetica, sans-serif;
+}
+body{
+    background-color: #333;
+    background: url(img/fundo\ 3.png);
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    min-height: 100vh;
+}
+main{
+    position: relative;
+    height: 100vh;
+    width: 100vw;
+}
+.apresentacao{
+    position: absolute;
+    left: 150px;
+    top: 100px; 
+}
+.apresentacao h1{
+  font-family: 'Poppins', sans-serif; /* Use a fonte da imagem ou uma semelhante */
+  font-size: 3rem; /* Ajuste o tamanho conforme necessário */
+  font-weight: bold; /* Deixa o texto em negrito */
+
+  border-bottom: 2.5px solid;
+  border-image-source: linear-gradient(to right, #3392ff 30%, rgba(255, 255, 255, 0.445), transparent); 
+  border-image-slice: 1;
+
+  background: linear-gradient(to right, #ffffff, #a3d8ff); /* Ajuste as cores se necessário */
+  -webkit-background-clip: text; /* Recorta o gradiente para o texto */
+  -webkit-text-fill-color: transparent; /* Torna o preenchimento original transparente */
+  text-shadow: 0 0 10px rgba(0, 150, 255, 0.3); /* Ajuste a cor e intensidade do brilho */
+}
+.apresentacao p{
+  padding: 7px 0px;
+  font-family: 'Poppins', sans-serif; 
+  font-size: 1.2rem; 
+  color: #e0e0e0; 
+  letter-spacing: 2px;
+}
+/*projetos*/
+.projetos{
+    position: absolute;
+    display: flex;
+    gap: 25px;
+    bottom: 120px;
+    left: 53%;
+    transform: translateX(-50%);
+    
+}
+.projeto1, .projeto2{
+    transition-duration: 1s;
+}
+.projeto1:hover, .projeto2:hover{
+    transform: scale(1.1); 
+}
+.projetos .tituloProjeto{
+    color: #a3d8ff;
+    font-size: 1.3rem;
+    font-family: 'Poppins', sans-serif;
+    text-align: center;
+    padding-bottom: 3px;
+}
+.projetos .imgP{
+    background-color: rgba(255, 255, 255, 0.486);
+    width: 230px;
+    height: 120px;
+    border-radius: 10px;
+    border: 1px solid white;
+}
+.projetos .nomeProjeto {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 500;
+    text-align: center;
+}
+.projetos .nomeProjeto a{
+    text-decoration: none;
+    color: #c6f2ff;
+
+}
+/*linguagens*/
+.linguagens{
+    display: flex;
+    gap: 15px;
+    position: absolute;
+    top: 20px;
+    right: 60px;
+    text-align: center;
+    height: 200px;
+    justify-content:center;
+    align-items: center;
+    transition-duration: 1s;
+}
+.html{
+    margin-top: 20px;
+    transition-duration: 1s;
+}
+.css{
+    transition-duration: 1s;
+}
+.js{
+    margin-top: 30px;
+    transition-duration: 1s;
+}
+ .imghtml, .imgcss, .imgjs{
+    width: 100px;
+}
+.html:hover, .css:hover, .js:hover{
+    transform: scale(1.2);
+    box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
+    border-radius: 10px;
+}
+/*Frase*/
+.fraseDeEfeito{
+    position: absolute;
+    bottom: 20px;
+    right: 60px;
+}
+.fraseDeEfeito h3{
+    color: #5ec8fd;
+    font-size: 1.7rem;
+    padding-bottom: 4px;
+    border-bottom: 2px solid;
+    border-image-source: linear-gradient(to left, #c29e00 30%, rgba(255, 255, 255, 0.486), transparent); 
+    border-image-slice: 1;
+}
+
+

@@ -28,7 +28,7 @@ Meu objetivo é conquistar uma oportunidade como **desenvolvedor** e crescer pro
 
 📌 Você pode visualizar meus projetos organizados no meu portfólio:
 
-🔗 **(adicione aqui o link do seu portfólio depois)**
+🔗 **https://edilsomar.github.io/Estudos-HTML-CSS-JavaScript/**
 
 ---
 

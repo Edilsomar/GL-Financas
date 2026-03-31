@@ -1,0 +1,185 @@
+@import url('https://fonts.googleapis.com/css2?family=Saira:ital,wght@0,100..900;1,100..900&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Saira", sans-serif;
+}
+
+body {
+    display: flex;
+    justify-content: end;
+    align-items: center;
+    min-height: 100vh;
+    background: url('../img/Background_main.png');
+    background-size: 150vh;
+    background-position: left;
+    background-repeat: no-repeat;
+    background-color: #0D2844;
+    
+}
+
+.conteiner {
+    border: 1px solid rgba(255, 255, 255, 0.425);
+    border-radius: 15px;
+    color: #fff;
+    width: 430px;
+    padding: 60px 20px 50px;
+    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.35);
+    background-image: linear-gradient(to right, transparent,#011429 60%);
+}
+
+.conteiner h1 {
+    font-size: 36px;
+    text-align: center;
+    padding-top: 10px ;
+    margin-bottom: -10px;
+}
+
+.input-box {
+    position: relative;
+    width: 100%;
+    height: 50px;
+    margin: 30px 0;
+}
+
+.input-box input {
+    width: 100%;
+    height: 100%;
+    background-color: transparent;
+    outline: none;
+    border: none;
+    font-size: 16px;
+    padding: 20px 45px 20px 20px;
+    color: #fff;
+    border-radius: 40px;
+    border: 1px solid #fff;
+}
+
+.input-box input::placeholder {
+    color: #fff;
+}
+
+.input-box i {
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 20px;
+}
+
+.remember-forgot {
+    display: flex;
+    justify-content: space-between;
+    font-size: 16px;
+    margin: -15px 0 20px;
+}
+
+.remember-forgot label input {
+    position: relative;
+    top: 1px;
+    accent-color: #0D2844;
+    
+}
+
+.remember-forgot a {
+    text-decoration: none;
+    color: #54a7ff;
+    font-weight: 600;
+}
+
+.remember-forgot a:hover {
+    font-weight: 800;
+    text-decoration: underline;
+    transition: 0.5s;
+}
+
+.login {
+    width: 100%;
+    height: 50px;
+    background-color: #fff;
+    border: none;
+    border-radius: 40px;
+    cursor: pointer;
+    font-size: 16px;
+    color: #333;
+    font-weight: 600;
+    box-shadow: 0 0 10px rgba(0, 0, 0, .1);
+}
+.login:hover{
+    background-color: transparent;
+    border: 1px solid #fff;
+    color: #fff;
+    transition: 0.5s;
+}
+
+.register-link {
+    font-size: 15px;
+    text-align: center;
+    margin: 8px 0 15px;
+}
+
+.register-link a {
+
+    text-decoration: none;
+    color: #54a7ff;
+    font-weight: 600;
+}
+
+.register-link a:hover {
+    font-weight: 800;
+    text-decoration: underline;
+    transition: 0.5s;
+}
+
+/*Guia de Manutenção*/
+
+/*
+Body                 (todo o corpo)               : linha 22
+Conteiner            (caixa do login)             : linha 22
+H1                   (do conteiner)               : linha 33 
+Formulários          (posição)                    : linha 40
+Formulários          (estilização)                : linha 47
+Placeholder          (nome no form)               : linha 60
+Icone                (dentro do form)             : linha 64 
+Remember-forgot      (senha esquecida)            : linha 72
+Link remember-forgot (link para recuperar)        : linha 85
+Hover link           (animação ao passar o mouse) : linha 90
+Login                (botão login)                : linha 96
+Hover login          (animação ao passar o mouse) : linha 108
+Register-link        (propiedades box registrar)  : linha 115
+Link register-link   (link para registrar)        : linha 121
+Hover link           (animção ao passar mouse)    : linha 127 
+
+*/
+
+@media (max-width: 1000px){
+    body{
+        justify-content: center;
+        background-size: cover;
+    }
+    .conteiner{
+        background-image: linear-gradient(to right,transparent, transparent);
+
+    }
+    .input-box input {
+    background-color: #4981c094;
+    border: 1px solid #fff;
+
+    }
+    .input-box input::placeholder{
+        color: #ffffff;
+        font-weight: 600;
+    }
+}
+@media (max-width: 500px){
+    body{
+        background-position: 21% ;
+
+    }
+    .conteiner{
+        width: 95%;
+        margin: auto;
+    }
+}

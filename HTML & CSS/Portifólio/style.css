@@ -114,8 +114,7 @@ main{
 }
 .contato{
     display: flex;
-    justify-content: end;
-    margin: 20px 0px 0px 0px;
+    flex-direction: row;
 }
 @media(max-width: 1050px){
     .apresentacao, .linguagens, .projetos, .contato{

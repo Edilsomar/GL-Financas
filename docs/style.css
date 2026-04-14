@@ -118,6 +118,9 @@ main{
     margin: 20px 0px 0px 0px;
 }
 @media(max-width: 1050px){
+    body{
+        background-color: #333;
+    }
     .apresentacao, .linguagens, .projetos, .contato{
         justify-content: center;
     }

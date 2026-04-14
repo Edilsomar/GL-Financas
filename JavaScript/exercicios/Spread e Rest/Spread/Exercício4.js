@@ -10,5 +10,5 @@ const itemEstoque = {
   quantidade: 5
 };
 
-const itemAtualizado = {...itemEstoque, preco : 29.00 , ultimaAtulização : 'hoje'}
+const itemAtualizado = {...itemEstoque, preco : 29.00, ultimaAtulização : 'hoje'}
 console.log(itemAtualizado)

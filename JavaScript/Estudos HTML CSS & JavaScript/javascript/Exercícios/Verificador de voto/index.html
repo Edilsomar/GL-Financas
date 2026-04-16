@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Verificador de Voto</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 50px;
+        }
+        input, button {
+            padding: 8px;
+            font-size: 16px;
+        }
+        #resultado {
+            margin-top: 20px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Verificador de Situação de Voto</h1>
+
+    <input type="number" id="idade" placeholder="Digite sua idade">
+    <button onclick="verificar()">Verificar</button>
+
+    <div id="resultado"></div>
+
+    <script>
+        function verificar() {
+            var idade = Number(document.getElementById("idade").value);
+            var resultado = document.getElementById("resultado");
+
+            if (idade < 16){
+                resultado.innerHTML = "Não vota";
+            } else if (idade < 18 || idade >= 67){
+                resultado.innerHTML = "Voto opcional";
+            } else {
+                resultado.innerHTML = "Voto obrigatório";
+            }
+        }
+    </script>
+
+</body>
+</html>

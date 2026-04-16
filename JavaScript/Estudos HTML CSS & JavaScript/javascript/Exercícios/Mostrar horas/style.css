@@ -1,0 +1,69 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Saira:ital,wght@0,100..900;1,100..900&display=swap');
+*{
+    padding: 0px;
+    margin: 0px;
+    box-sizing: border-box;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 1.5rem;
+}
+#cabecalho{
+    background-color: #657de6;
+    min-height: 100px;  
+    display: flex;
+    margin-bottom: 80px;
+    border-bottom: 1px solid #516ff0;
+}
+#tcabecalho{
+    color: white;
+    margin: auto;
+    text-shadow: rgba(255, 255, 255) 0px 5px 15px;
+}
+body{
+    background-color: rgb(184, 213, 233);
+}
+#principal{
+    background-color: white;
+    max-width: 70vw;
+    height: 100vh;
+    font-size: 1rem;
+    margin: auto;
+    padding: 20px;
+    border-radius: 20px;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    background-image: url(img/manha.jpg);
+    background-size: cover;
+    background-position: center;   /* centraliza */
+    background-repeat: no-repeat;  /* não repete */
+   
+}
+#titulo_main{
+   text-align: center;
+   margin-bottom: 25px;
+   color: white;
+   text-shadow: rgb(255, 255, 255) 0px 5px 15px;;
+}
+#relogio{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 75vh;
+}
+#hora{
+    font-size: 3rem;
+    color: white;
+    padding: 10px;
+    background-color: rgba(0, 0, 0, 0.438);
+    border-radius: 20px;
+    font-family:  'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    font-size: 3rem;
+    font-weight: bolder;
+}
+#rodape{
+    text-align: center;
+    margin-top: 15px;
+    color: white; 
+}
+#rodape p{
+    font-size: 16px;
+    padding-bottom: 50px;
+}

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Dia da Semana</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 50px;
+        }
+        #resultado {
+            font-size: 20px;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Descubra o dia da semana</h1>
+    <button onclick="verificarDia()">Ver Dia</button>
+
+    <div id="resultado"></div>
+
+    <script>
+        function verificarDia() {
+            var agora = new Date();
+            var diaSem = agora.getDay();
+            var resultado = document.getElementById("resultado");
+
+            switch (diaSem) {
+                case 0:
+                    resultado.innerHTML = "Hoje é Domingo";
+                    break;
+
+                case 1:
+                    resultado.innerHTML = "Hoje é Segunda-Feira";
+                    break;
+
+                case 2:
+                    resultado.innerHTML = "Hoje é Terça-Feira";
+                    break;
+
+                case 3:
+                    resultado.innerHTML = "Hoje é Quarta-Feira";
+                    break;
+
+                case 4:
+                    resultado.innerHTML = "Hoje é Quinta-Feira";
+                    break;
+
+                case 5:
+                    resultado.innerHTML = "Hoje é Sexta-Feira";
+                    break;
+
+                case 6:
+                    resultado.innerHTML = "Hoje é Sábado";
+                    break;
+
+                default:
+                    resultado.innerHTML = "[Erro] Dia indefinido";
+            }
+        }
+    </script>
+
+</body>
+</html>

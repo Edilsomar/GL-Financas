@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Converter Dinheiro</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header id="cabecalho">
+        <h1 id="thead">Aula 6</h1> 
+            <h2 id="sthead">JavaScript  40 horas <span>Curso Em Video</span> </h2>
+    </header>
+    <main>
+        <article> 
+            <h1>
+                <script>
+                    var n1 = window.prompt("Quanto você tem em Reais?")
+                    var dolar = n1 / 5.19
+                    var euros  = n1 / 6.19
+                        document.write(`
+                        Convertido para Dolar: ${dolar.toLocaleString('pt-br', {style : 'currency', currency : 'USD'})} <br> <br>
+                        Convertido para Euro:  ${euros.toLocaleString('pt-BR', {style : 'currency', currency : 'EUR'})}
+                        `)
+                </script>
+            </h1>
+        </article>
+    </main>
+        
+</body>
+</html> 

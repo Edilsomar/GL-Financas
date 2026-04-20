@@ -8,4 +8,5 @@ const [lider, ...demaisMarcas] = marcas
 
 console.log(lider)
 console.log(demaisMarcas)
-console.log(marcas)
+
+

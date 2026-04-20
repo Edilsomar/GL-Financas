@@ -1,4 +1,4 @@
-// Use a desestruturação de Objeto (chaves { }) para criar a variável nome.
+// Use a desestruturação de Objeto para criar a variável nome.
 // Use o Rest (...) para criar a variável infoTecnica com o que sobrar.
 // Dê um console.log(nome) e um console.log(infoTecnica).
 

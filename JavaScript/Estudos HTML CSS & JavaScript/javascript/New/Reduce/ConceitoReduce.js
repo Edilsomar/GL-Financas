@@ -1,4 +1,4 @@
-.reduce((acomulador, valorAtualSendoOperado) => acomulador + valorAtualSendoOperado, 0);
+arrayComValores.reduce((acomulador, valorAtualSendoOperado) => acomulador + valorAtualSendoOperado, 0);
 
 // o argumento acomulador vai acomular os valores do array 
 // o argumento valorAtualSendoOperado é o valor atual que está sendo operado

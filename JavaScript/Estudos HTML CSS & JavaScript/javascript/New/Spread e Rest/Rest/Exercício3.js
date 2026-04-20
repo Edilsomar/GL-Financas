@@ -5,7 +5,6 @@
 
 const precos = [150, 250, 400, 80, 120];
 
-const [maisBarato, ...outrosPrecos] = precos
-
+const [maisBarato, ...demaisValores] = precos
 console.log(maisBarato)
-console.log(outrosPrecos)
+console.log(demaisValores)

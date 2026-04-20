@@ -4,8 +4,10 @@
 
 const podio = ['Max Verstappen', 'Lewis Hamilton', 'Lando Norris'];
 
-const [campeao, viceCampeao] = podio
-console.log(`Em primeiro lugar: ${campeao} e em segundo lugar:${viceCampeao}`)
+const [campeao, vice, terceiro] = podio
+console.log(`Terceiro lugar: ${terceiro} Segundo lugar: ${vice} Primeiro lugar: ${campeao}`)
+
+
 
 //Quando a variavel é um array para fazer uma desestruturação é necessario dar nomes aos indices em sua respectiva ordem
 //Quando a variavel contem um objeto, temos que pegar o nome do item especifico dentro do objeto

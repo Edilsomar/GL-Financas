@@ -75,8 +75,8 @@ function valorTotal(){
     var spansTot = document.querySelectorAll("span.tot");
     var soma = 0;
 
-    for (let i = 0; i < lista.length; i++){
-        soma += lista[i];
+    for (let i of lista){
+        soma += i;
         }  
         
         spansTot.forEach(span => {

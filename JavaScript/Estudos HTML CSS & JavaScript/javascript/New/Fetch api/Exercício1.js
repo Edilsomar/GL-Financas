@@ -7,7 +7,8 @@
 async function buscarDados(){
     const api = await fetch('https://jsonplaceholder.typicode.com/users/3')
     const json = await api.json()
-    const {name, username} = json
-    console.log(`Olá ${name} ${username}`)
+    const {name, email} = json
+    console.log(`Usuário: ${name} Email: ${email}`)
 }
 buscarDados()
+

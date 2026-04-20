@@ -235,9 +235,9 @@ main .box .b2 input, #type{
   border: 0.1px solid #727272;
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
   padding: 8px 10px;
-  width: 95%;
+  width: 100%;
   border-radius: 5px;
-
+ outline: none;
 }
 main .box .b2 input.btn{
   background-color: #064ba5;
@@ -246,9 +246,21 @@ main .box .b2 input.btn{
   cursor:pointer;
   transition: 0.5s;
   margin-top: 5px;
+  border: 0;
+  width: 100px;
 }
 main .box .b2 input.btn:hover{
   background-color: #021c3f;
+}
+main .box .b2 input.btncancelar{
+  background-color: #ffffff;
+  color: #000000;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  cursor:pointer;
+  transition: 0.5s;
+  margin-top: 5px;
+  border: 0;
+  width: 100px;
 }
 /* footer*/
 footer{

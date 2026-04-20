@@ -10,5 +10,6 @@ const itemEstoque = {
   quantidade: 5
 };
 
-const itemAtualizado = {...itemEstoque, preco : 29.00, ultimaAtulização : 'hoje'}
+const itemAtualizado = {...itemEstoque, preco : 29.00, ultimaAtualizacao: 'hoje'} 
 console.log(itemAtualizado)
+//obs: cuidado com acentos na palavra, se tiver ele reconhece como string!

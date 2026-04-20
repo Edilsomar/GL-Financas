@@ -4,4 +4,4 @@ const clienteApi = {
 };
  
 const { client_full_name : nome, total_spent_value : total} = clienteApi
-console.log(` O cliente ${nome} comprou um produto no valor de :${total.toLocaleString('PT-BR', {style : 'currency', currency :'BRL'})}`)
+console.log(` O cliente ${nome} comprou um produto no valor de :${total.toLocaleString('pt-br', {style : 'currency', currency : 'BRL'})}`)

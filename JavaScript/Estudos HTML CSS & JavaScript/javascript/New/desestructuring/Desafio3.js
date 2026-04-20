@@ -6,11 +6,10 @@ const curso = {
   titulo: 'Lógica de Programação',
   alunos: ['Carlos', 'Ana', 'Ricardo']
 };
-
-const {titulo, alunos} = curso
-const [primeiroAluno, segundoAluno, terceiroAluno] = alunos
-
-console.log(`Curso: ${titulo}. Alunos: ${primeiroAluno}, ${segundoAluno}`)
+const {titulo: cursoNome, alunos: [primeiroaAluno,,terceiroAluno]} = curso
+console.log(`Curso: ${cursoNome}. Alunos cadastrados: ${primeiroaAluno} e ${terceiroAluno}`)
 
 //const [primeiro, , terceiro] = alunos; 
 // A vírgula vazia diz ao JS: "Pule o segundo item"
+
+

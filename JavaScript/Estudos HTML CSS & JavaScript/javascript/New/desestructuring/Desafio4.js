@@ -7,6 +7,5 @@ const config = {
   nome_do_sistema: 'Gestão Pro',
   versao_atual: '1.0.5'
 };
-
 const {nome_do_sistema : nome, versao_atual : versao} = config
 console.log(nome, versao)

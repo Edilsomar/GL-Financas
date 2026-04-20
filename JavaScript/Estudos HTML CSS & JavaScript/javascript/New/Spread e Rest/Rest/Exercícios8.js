@@ -10,7 +10,8 @@ const servico = {
   data: '2026-04-14'
 };
 
-const {cliente, carro, ...resto} = servico
+const {cliente, carro,...resto} = servico
 console.log(cliente)
 console.log(carro)
 console.log(resto)
+

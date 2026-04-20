@@ -11,6 +11,6 @@ const dev = {
     linkedin: 'lucas-oliveira'
   }
 };
-const {nome, idade} = dev
-const {social: {github}} = dev
-console.log( `Meu nome é ${nome} e meu github [e ${github}]`)
+const {nome, idade, social : {github}} = dev
+console.log(`Candidato ${nome} idade : ${idade} linguagens: ${dev.tecnologias} github ${github}`)
+

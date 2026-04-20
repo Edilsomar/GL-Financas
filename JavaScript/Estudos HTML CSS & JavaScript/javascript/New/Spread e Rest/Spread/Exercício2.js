@@ -13,5 +13,6 @@ const cliente = {
 const clienteAtualizado = {...cliente, telefone : '1111-4444', status : 'VIP'}
 console.log(clienteAtualizado)
 
+
 // Nesse exercicios criamos uma constante spread e além disso atualizamos os valores que já existia na constante antigo 
 // além de implemetar mais um dado nela

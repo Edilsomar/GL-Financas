@@ -77,14 +77,18 @@
                 <h2>Nova transação</h2>
             </div>
             <div class="b2">
-                <input id="d" type="text" placeholder="Descrição">
-                <input id="v" type="number" placeholder="Valor">
+                <div style="display: flex;">
+                    <input id="d" type="text" placeholder="Descrição">
+                    <input id="v" type="number" placeholder="Valor">
+                </div>
                 <select id="type">
                     <option value="positivo">Entrada</option>
                     <option value="negativo">Saída</option>
                 </select>
-                <input onclick="enviar()" class="btn" type="button" value="Enviar">
-                <input onclick="cancelar()" class="btncancelar" type="button" value="Cancelar">
+                <div style="display: flex gap">
+                    <input onclick="enviar()" class="btn" type="button" value="Enviar">
+                    <input onclick="cancelar()" class="btncancelar" type="button" value="Cancelar">
+                </div>
             </div>
         </div>
     </main>
@@ -96,6 +100,6 @@
         </div>
         <p>&copy;Edilsomar Oliveira</p>
     </footer>
-    <script src="javascript.js"></script>
+    <script src="teste.js"></script>
 </body>
 </html>

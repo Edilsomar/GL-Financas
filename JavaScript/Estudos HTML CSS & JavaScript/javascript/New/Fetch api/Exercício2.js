@@ -3,14 +3,15 @@
 // Na hora de desestruturar o json, pegue o name do usuário e o name que está dentro de company.
 // Exiba no console: "O [nome] trabalha na empresa [nomeEmpresa]".
 
-async function consumirApi(){
-    const api = await fetch('https://jsonplaceholder.typicode.com/users/3')
+async function buscarDados(){
+    const api = await fetch('https://jsonplaceholder.typicode.com/users/1')
     const json = await api.json()
-    const {name, username, company : {name : nameEmpresa}} = json
+    const {name, email, company: {name : nomeEmpresa}} = json
 
-    console.log(`O ${name} ${username} trabalha na empresa ${nameEmpresa}`)
+    console.log(`Usuário: ${name} Email: ${email} Empresa: ${nomeEmpresa}`)
 }
-consumirApi()
+buscarDados()
+
 
 // company: { ... } → "JavaScript, entre na chave company".
 // name: nomeEmpresa → "Pegue o name que está lá dentro e salve em uma variável chamada nomeEmpresa" 

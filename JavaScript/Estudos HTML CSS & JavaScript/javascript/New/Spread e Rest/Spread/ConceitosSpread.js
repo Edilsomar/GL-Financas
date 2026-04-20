@@ -6,7 +6,9 @@
 const frutas = ['Maçã', 'Banana'];
 const legumes = ['Cenoura', 'Batata'];
 
-//Juntatndo as listas !
+//Juntando as listas !
 const feira = [...frutas, ...legumes, 'ovo'] //aqui eu to basicamente dizendo, jogue frutas e legumes dentro de feira e no final boto um ovo :D
 console.log(feira)
+
+
 

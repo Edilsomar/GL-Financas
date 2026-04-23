@@ -19,20 +19,22 @@
         </div>
         <div class="usuario">
             <p>U</p>
-            <a href=""><img width="15" height="15" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAvklEQVR4nO3XTQqDMBCG4VyiUu9/k3bVv01d9DhvEV0JlqjJZIZ+LwguMpCHWSUlpZRSSiml/jbgAjyBLjkL6IAXcM05fGdq8IRhQox3GrvlDJyA9zzwAXqTm26703nvYB8O4QnDUYQHDKUQLTGURrTAUAthiaE2wgJjhqiJMUfUwDRDlMQ0R5TAuEEcwbhD7MG4RWzBuEfkYMIgfmHCIVZec8Pi382rM6vFFmJtYmUzj/mLtQmllFJKKaWS175p48/VvG0ExwAAAABJRU5ErkJggg==" alt="expand-arrow--v2"></a>
+            <a href="#"><img width="15" height="15" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAvklEQVR4nO3XTQqDMBCG4VyiUu9/k3bVv01d9DhvEV0JlqjJZIZ+LwguMpCHWSUlpZRSSiml/jbgAjyBLjkL6IAXcM05fGdq8IRhQox3GrvlDJyA9zzwAXqTm26703nvYB8O4QnDUYQHDKUQLTGURrTAUAthiaE2wgJjhqiJMUfUwDRDlMQ0R5TAuEEcwbhD7MG4RWzBuEfkYMIgfmHCIVZec8Pi382rM6vFFmJtYmUzj/mLtQmllFJKKaWS175p48/VvG0ExwAAAABJRU5ErkJggg==" alt="expand-arrow"></a>
         </div>
     </header>
+
     <main>
         <div class="conteiner_val">
             <div class="entrada">
                 <div>
-                    <img  class="setaverdecima" src="icones/Seta_Verde_Cima.png" alt="Seta verde para cima">
+                    <img class="setaverdecima" src="icones/Seta_Verde_Cima.png" alt="Seta verde para cima">
                 </div> 
                 <div class="entrada_exibicao">
                     <p>Entradas</p>
                     <h3><span class="entTot">R$ 0.00</span></h3>
                  </div>   
             </div>
+
             <div class="saida">
                 <div>
                     <img class="setavermelhabaixo" src="icones/Seta_Vermelha_Baixo.png" alt="Seta vermelha para baixo">
@@ -42,6 +44,7 @@
                     <h3><span class="saiTot">R$ 0.00</span></h3>
                  </div>   
             </div>
+
             <div class="total">
                    <div class="total_exibicao">
                     <p>Total</p>
@@ -49,35 +52,34 @@
                  </div>   
             </div>
         </div>
-        <div>
-            <div class="transacoes">
-                <div class="header_transacoes">
-                    <h2>Transações</h2>
-                    <input onclick="NovaTransacao()" type="submit" value="+  Nova Transação">        
-                </div>
-                <div class="tabela">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th class="começo">Descrição</th>
-                                <th>Valor</th>
-                                <th class="fim">Editar</th>
-                            </tr>
-                        </thead>
-                        <tbody class="corpoT">
-                        </tbody>
-                    </table>
-                </div>
+
+        <div class="transacoes">
+            <div class="header_transacoes">
+                <h2>Transações</h2>
+                <input onclick="NovaTransacao()" type="submit" value="+ Nova Transação">        
+            </div>
+            <div class="tabela">
+                <table>
+                    <thead>
+                        <tr>
+                            <th class="começo">Descrição</th>
+                            <th>Valor</th>
+                            <th class="fim">Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody class="corpoT"></tbody>
+                </table>
             </div>
         </div>
-        <div class="fundoEscuro"></div>
+
+        <div class="fundoEscuro" onclick="cancelar()"></div>
+
         <div class="box">
-            
             <div>
                 <h2>Nova transação</h2>
             </div>
             <div class="b2">
-                <div style="display: flex;">
+                <div style="display: flex; gap: 5px;">
                     <input id="d" type="text" placeholder="Descrição">
                     <input id="v" type="number" placeholder="Valor">
                 </div>
@@ -85,21 +87,37 @@
                     <option value="positivo">Entrada</option>
                     <option value="negativo">Saída</option>
                 </select>
-                <div style="display: flex gap">
+                <div style="display: flex; gap: 5px;">
                     <input onclick="enviar()" class="btn" type="button" value="Enviar">
                     <input onclick="cancelar()" class="btncancelar" type="button" value="Cancelar">
                 </div>
             </div>
         </div>
+
+        <div id="boxEditar">
+            <div id="editarTitulo">
+                <h2>Atualizar valores</h2>
+            </div>
+            <div id="dados">
+                <input id="novaDescricao" type="text" placeholder="Descrição">
+                <input id="novoValor" type="number" placeholder="Valor">
+            </div>
+            <div id="btns">
+                <input id="enviar" type="button" value="Salvar" onclick="salvarEdicao()">
+                <input id="cancelar" type="button" value="Cancelar" onclick="cancelarEdicao()">
+            </div>
+        </div>
     </main>
+
     <footer>
         <div class="contato">
-            <div><a href="https://www.linkedin.com/in/edilsomar-oliveira-de-jesus-0a8450338?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app" target="_blank">Linkedin</a></div>
+            <div><a href="https://www.linkedin.com/in/edilsomar-oliveira-de-jesus-0a8450338" target="_blank">Linkedin</a></div>
             <div><a href="https://github.com/edilsomar" target="_blank">Github</a></div>
             <div><a href="https://wa.me/5571983202449" target="_blank">Whatsapp</a></div>
         </div>
-        <p>&copy;Edilsomar Oliveira</p>
+        <p>&copy; 2026 Edilsomar Oliveira</p>
     </footer>
-    <script src="javascript.js"></script>
+
+    <script src="teste.js"></script>
 </body>
 </html>

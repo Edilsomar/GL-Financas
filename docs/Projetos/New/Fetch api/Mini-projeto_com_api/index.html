@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+        }
+        body{
+            background-color: rgb(253, 253, 253);
+        }
+        
+        header{
+            background-image: linear-gradient(to right, rgb(10, 53, 109), rgba(177, 208, 250, 0.541));
+            display: flex;
+            justify-content: space-between;
+            padding: 30px 15px 20px;
+            box-shadow: rgba(1, 10, 63, 0.356) 0px 3px 5px;
+            margin-bottom: 30px;
+            
+
+            h1{
+                color: #fff;
+            }
+            img{
+                width: 55px;
+            }
+        }
+        section{
+            margin: auto;
+            width: 80%;
+            border-radius: 20px;
+            background-color: rgb(2, 33, 80);
+            padding:10px 20px;
+            box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+
+            h2{
+                font-size: 2.5rem;
+                margin: 20px 0px 10px;
+                text-align:center;
+                color: rgb(255, 255, 255);
+            }
+            ul{
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            li{
+                list-style: none;
+                background-color: #fff;
+                width: 500px;
+                min-height: 100%;
+                margin: 5px;
+                border-radius: 4px;
+                padding: 5px 10px;
+                box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>NTT DATA CLIENTES</h1>
+        <img src="img/Favicon_NTT_DATA.png" alt="ntt_data_icone">
+    </header>
+    
+    <section>
+        <h2>Lista de Dados Clientes </h2>
+        <ul id="lista"></ul>
+    </section>
+
+    <script src="script.js"></script>
+</body>

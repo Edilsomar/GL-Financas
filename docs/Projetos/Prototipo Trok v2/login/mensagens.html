@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TROK - Minhas Mensagens</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .container-mensagens { padding: 15px; max-width: 600px; margin: 0 auto; }
+        .card-chat { display: flex; align-items: center; gap: 15px; background: #fff; padding: 15px; border-radius: 12px; margin-bottom: 12px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); cursor: pointer; border: 1px solid #eee; position: relative; }
+        .card-chat:hover { transform: translateY(-2px); box-shadow: 0 4px 8px rgba(0,0,0,0.1); border-color: #e96e28; }
+        .foto-chat { width: 65px; height: 65px; border-radius: 8px; object-fit: cover; background: #f9f9f9; }
+        .info-chat { flex: 1; overflow: hidden; }
+        .info-chat h3 { margin: 0 0 3px 0; font-size: 16px; font-weight: bold; }
+        .dono-ref { font-size: 12px; color: #e96e28; font-weight: 600; display: block; margin-bottom: 4px; }
+        .info-chat p { margin: 0; font-size: 14px; color: #777; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .tempo-msg { font-size: 10px; color: #999; float: right; }
+        .btn-excluir { background: none; border: none; color: #ccc; cursor: pointer; padding: 5px; font-size: 16px; }
+        .status-dot { width: 10px; height: 10px; border-radius: 50%; border: 2px solid white; position: absolute; left: 70px; top: 15px; }
+    </style>
+</head>
+<body>
+    <header id="cabecalho">
+        <a href="index.html" style="text-decoration: none; color: white; font-size: 20px;">←</a>
+        <h2>Minhas Conversas</h2>
+        <div style="width: 50px;"></div>
+    </header>
+    <main class="container-mensagens" id="listaMensagens"></main>
+
+    <script src="https://www.gstatic.com/firebasejs/10.11.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.11.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore-compat.js"></script>
+    <script src="firebase-init.js"></script>
+    <script>
+        const usuarioLogado = JSON.parse(localStorage.getItem('usuarioLogado'));
+        if (!usuarioLogado) window.location.href = 'login.html';
+        localStorage.setItem('ultimaVezVistoMensagens', Date.now());
+
+        async function excluirChat(id) {
+            if (confirm("Remover esta conversa e limpar o histórico para você?")) {
+                const agora = Date.now();
+                // Marcamos quem removeu E a hora que removeu
+                await db.collection('chats').doc(id).update({
+                    removidoPor: firebase.firestore.FieldValue.arrayUnion(usuarioLogado.email),
+                    [`limiteHistorico_${usuarioLogado.email.replace(/\./g, '_')}`]: agora
+                });
+            }
+        }
+
+        db.collection('chats').where('participantes', 'array-contains', usuarioLogado.email).onSnapshot(snap => {
+            const lista = document.getElementById('listaMensagens');
+            lista.innerHTML = "";
+            if (snap.empty) {
+                lista.innerHTML = `<p style="text-align:center; margin-top:50px; color:#999;">Nenhuma conversa.</p>`;
+                return;
+            }
+            let chats = [];
+            snap.forEach(doc => {
+                const dados = doc.data();
+                if (!dados.removidoPor || !dados.removidoPor.includes(usuarioLogado.email)) {
+                    chats.push({ idDoc: doc.id, ...dados });
+                }
+            });
+
+            chats.sort((a, b) => (b.dataAtualizacao || 0) - (a.dataAtualizacao || 0));
+
+            chats.forEach(chat => {
+                const outroEmail = (chat.participantes || []).find(e => e !== usuarioLogado.email);
+                const hora = chat.dataAtualizacao ? new Date(chat.dataAtualizacao).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}) : "";
+
+                db.collection('usuarios').where('email', '==', outroEmail).onSnapshot(uSnap => {
+                    if(!uSnap.empty) {
+                        const u = uSnap.docs[0].data();
+                        const dot = document.getElementById(`status-${chat.idDaSala}`);
+                        if(dot) dot.style.backgroundColor = u.online ? "#4CAF50" : "#999";
+                    }
+                });
+
+                lista.innerHTML += `
+                    <div class="card-chat" onclick="window.location.href='chat.html?sala=${chat.idDaSala}'">
+                        <div id="status-${chat.idDaSala}" class="status-dot" style="background-color: #999;"></div>
+                        <img src="${chat.produtoFoto}" class="foto-chat">
+                        <div class="info-chat">
+                            <span class="tempo-msg">${hora}</span>
+                            <span class="dono-ref">${chat.dadosParticipantes[outroEmail].nome}</span>
+                            <h3>${chat.produtoNome || "Chat"}</h3>
+                            <p>${chat.ultimaMensagem || "Iniciou uma conversa"}</p>
+                        </div>
+                        <button class="btn-excluir" onclick="event.stopPropagation(); excluirChat('${chat.idDoc}')">🗑️</button>
+                    </div>`;
+            });
+        });
+    </script>
+</body>
+</html>

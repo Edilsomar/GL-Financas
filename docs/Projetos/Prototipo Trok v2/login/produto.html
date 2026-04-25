@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TROK - Detalhes do Produto</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .container-produto { padding: 15px; max-width: 600px; margin: 0 auto; }
+        .foto-principal-display { width: 100%; height: 350px; background: #fdfdfd; border-radius: 12px; display: flex; align-items: center; justify-content: center; overflow: hidden; margin-bottom: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); border: 1px solid #eee; }
+        .foto-principal-display img { width: 100%; height: 100%; object-fit: contain; }
+        .grid-miniaturas { display: flex; gap: 10px; justify-content: center; margin-bottom: 25px; }
+        .miniatura { width: 65px; height: 65px; border-radius: 8px; cursor: pointer; border: 2px solid transparent; object-fit: cover; transition: 0.2s; opacity: 0.6; }
+        .miniatura:hover { opacity: 1; transform: scale(1.05); }
+        .miniatura.ativa { border-color: #e96e28; opacity: 1; }
+        .info-produto { text-align: left; background: #fff; padding: 20px; border-radius: 12px; border: 1px solid #eee; }
+        .btn-chat { width: 100%; background: #e96e28; color: #fff; padding: 18px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 1rem; margin-top: 10px; transition: 0.2s;}
+        .btn-chat:hover { background: #d15d1f; }
+        .btn-chat:disabled { background: #ccc; cursor: not-allowed; }
+    </style>
+</head>
+<body>
+    <header id="cabecalho">
+        <a href="index.html" style="text-decoration: none; color: white; font-weight: bold;">← Voltar ao Feed</a>
+        <h2>Detalhes</h2>
+        <div style="width: 50px;"></div>
+    </header>
+
+    <main class="container-produto" id="conteudoProduto">
+        <div style="text-align: center; margin-top: 50px;">Buscando na nuvem... ☁️</div>
+    </main>
+
+    <script src="https://www.gstatic.com/firebasejs/10.11.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.11.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore-compat.js"></script>
+    <script src="firebase-init.js"></script>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const produtoIdURL = Number(urlParams.get('id'));
+
+        async function carregarDetalhes() {
+            if (!produtoIdURL) return window.location.href = 'index.html';
+            try {
+                const snapshot = await db.collection('produtos').where('id', '==', produtoIdURL).get();
+                if (snapshot.empty) {
+                    alert("Anúncio não encontrado.");
+                    return window.location.href = 'index.html';
+                }
+
+                const doc = snapshot.docs[0];
+                const p = doc.data();
+                const produtoIdDB = doc.id; 
+                const fotos = p.fotos || [p.foto];
+                const usuarioLogado = JSON.parse(localStorage.getItem('usuarioLogado'));
+                const ehMeu = usuarioLogado && usuarioLogado.email === p.donoEmail;
+
+                const conteudo = document.getElementById('conteudoProduto');
+                conteudo.innerHTML = `
+                    <div class="foto-principal-display">
+                        <img src="${fotos[0]}" id="fotoGrande">
+                    </div>
+                    <div class="grid-miniaturas">
+                        ${fotos.map((url, i) => `
+                            <img src="${url}" class="miniatura ${i===0?'ativa':''}" onclick="trocarFoto(this, '${url}')">
+                        `).join('')}
+                    </div>
+                    <div class="info-produto">
+                        <span style="color:#e96e28; font-weight:bold; font-size:12px; letter-spacing:1px;">${p.categoria.toUpperCase()}</span>
+                        <h2 style="margin: 8px 0; font-size: 24px;">${p.nome}</h2>
+                        <p style="color:#555; line-height:1.6; font-size: 15px;">${p.descricao}</p>
+                        <hr style="border:0; border-top:1px solid #f0f0f0; margin:20px 0;">
+                        <div style="display:flex; align-items:center; gap:15px; margin-bottom:25px;">
+                            <img src="${p.donoFoto}" style="width:55px; height:55px; border-radius:50%; object-fit:cover; border: 2px solid #eee;">
+                            <div>
+                                <strong style="display:block; font-size: 16px;">${p.donoNome}</strong>
+                                <small style="color:#888;">📍 ${p.donoEndereco}</small>
+                            </div>
+                        </div>
+
+                        ${ehMeu ? 
+                            `<button class="btn-chat" disabled>Este é o seu anúncio</button>` : 
+                            `<button id="btnTrocar" class="btn-chat" onclick="iniciarChat('${p.donoEmail}', '${p.donoNome}', '${p.donoFoto}', '${p.nome}', ${p.id}, '${fotos[0]}', '${produtoIdDB}')">Trocar Agora</button>`
+                        }
+                    </div>
+                `;
+            } catch (erro) {
+                console.error(erro);
+            }
+        }
+
+        function trocarFoto(elemento, url) {
+            document.getElementById('fotoGrande').src = url;
+            document.querySelectorAll('.miniatura').forEach(m => m.classList.remove('ativa'));
+            elemento.classList.add('ativa');
+        }
+
+        async function iniciarChat(donoEmail, donoNome, donoFoto, produtoNome, produtoId, produtoFoto, produtoIdDB) {
+            const usuarioLogado = JSON.parse(localStorage.getItem('usuarioLogado'));
+            if (!usuarioLogado || !usuarioLogado.email) return;
+
+            const btn = document.getElementById('btnTrocar');
+            btn.innerText = "Conectando...";
+            btn.disabled = true;
+
+            const meuEmail = usuarioLogado.email;
+            const email1 = meuEmail.replace(/\./g, '_');
+            const email2 = donoEmail.replace(/\./g, '_');
+            const emailsOrdenados = [email1, email2].sort();
+            
+            const idDaSala = `CHAT_${emailsOrdenados[0]}_${emailsOrdenados[1]}_${produtoId}`;
+
+            try {
+                const salaRef = db.collection('chats').doc(idDaSala);
+                const salaDoc = await salaRef.get();
+
+                if (!salaDoc.exists) {
+                    await salaRef.set({
+                        idDaSala: idDaSala,
+                        produtoId: produtoId,
+                        produtoIdDB: produtoIdDB,
+                        produtoNome: produtoNome,
+                        produtoFoto: produtoFoto,
+                        donoEmail: donoEmail,
+                        participantes: [meuEmail, donoEmail],
+                        removidoPor: [], 
+                        dadosParticipantes: {
+                            [meuEmail]: { nome: usuarioLogado.nome, foto: usuarioLogado.foto },
+                            [donoEmail]: { nome: donoNome, foto: donoFoto }
+                        },
+                        dataCriacao: Date.now(), 
+                        dataAtualizacao: Date.now(), 
+                        ultimaMensagem: "Chat iniciado"
+                    });
+                } else {
+                    // Reativa o chat caso ele tenha sido removido individualmente
+                    await salaRef.update({
+                        removidoPor: firebase.firestore.FieldValue.arrayRemove(meuEmail)
+                    });
+                }
+                window.location.href = `chat.html?sala=${idDaSala}`;
+            } catch (erro) {
+                console.error(erro);
+                btn.disabled = false;
+                btn.innerText = "Trocar Agora";
+            }
+        }
+        carregarDetalhes();
+    </script>
+</body>
+</html>

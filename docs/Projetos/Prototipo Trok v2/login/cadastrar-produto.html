@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TROK - Anunciar Produto</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .container-cadastro { padding: 20px; max-width: 500px; margin: 0 auto; }
+        .form-grupo { margin-bottom: 20px; text-align: left; }
+        .form-grupo label { display: block; margin-bottom: 8px; font-weight: bold; color: #444; }
+        .form-grupo input, .form-grupo textarea, .form-grupo select { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 8px; font-size: 16px; }
+        .btn-anunciar { width: 100%; background-color: #e96e28; color: white; padding: 15px; border: none; border-radius: 8px; font-size: 1.1rem; font-weight: bold; cursor: pointer; transition: 0.3s; }
+        .btn-anunciar:disabled { background-color: #ccc; cursor: not-allowed; }
+    </style>
+</head>
+<body>
+    <header id="cabecalho">
+        <a href="index.html" style="text-decoration: none; color: white; font-weight: bold;">← Voltar</a>
+        <h2>Anunciar</h2>
+        <div style="width: 50px;"></div>
+    </header>
+
+    <main class="container-cadastro">
+        <form id="formProduto">
+            <div class="form-grupo">
+                <label>O que você quer trocar?</label>
+                <input type="text" id="prodNome" placeholder="Ex: Controle de PS4" required>
+            </div>
+
+            <div class="form-grupo">
+                <label>Descrição (O que você busca?)</label>
+                <textarea id="prodDescricao" rows="4" placeholder="Ex: Troco por jogos de Switch" required></textarea>
+            </div>
+
+            <div class="form-grupo">
+                <label>Categoria do Item</label>
+                <select id="prodCategoria" required>
+                    <option value="" disabled selected>Selecione uma categoria</option>
+                    <option value="Eletrônicos">Eletrônicos</option>
+                    <option value="Games">Games</option>
+                    <option value="Esportes">Esportes</option>
+                    <option value="Música">Música</option>
+                    <option value="Casa & Móveis">Casa & Móveis</option>
+                    <option value="Ferramentas">Ferramentas</option>
+                    <option value="Outros">Outros</option>
+                </select>
+            </div>
+
+            <div class="form-grupo">
+                <label>Fotos do Produto (Selecione até 3)</label>
+                <input type="file" id="prodFoto" accept="image/*" multiple required>
+                <p id="statusFotos" style="font-size: 12px; color: #666; margin-top: 5px;">Máximo de 3 fotos.</p>
+            </div>
+
+            <button type="submit" id="btnPublicar" class="btn-anunciar">Publicar no TROK</button>
+        </form>
+    </main>
+
+    <script src="https://www.gstatic.com/firebasejs/10.11.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.11.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore-compat.js"></script>
+
+    <script src="firebase-init.js"></script>
+
+    <script>
+        const IMGBB_API_KEY = 'e78808d57f0cf6f6fabe4a68aec3890f';
+
+        async function subirParaImgBB(arquivo) {
+            const formData = new FormData();
+            formData.append('image', arquivo);
+            const res = await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`, {
+                method: 'POST',
+                body: formData
+            });
+            const dados = await res.json();
+            return dados.data.url;
+        }
+
+        document.getElementById('formProduto').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const usuarioLogado = JSON.parse(localStorage.getItem('usuarioLogado'));
+            if (!usuarioLogado) return alert("Sessão expirada. Faça login novamente.");
+
+            const btn = document.getElementById('btnPublicar');
+            const status = document.getElementById('statusFotos');
+            btn.disabled = true;
+            btn.innerText = "Enviando fotos para a nuvem...";
+
+            const fotosArquivos = document.getElementById('prodFoto').files;
+            const totalFotos = Math.min(fotosArquivos.length, 3);
+            const listaDeLinks = [];
+
+            try {
+                // Envia as fotos uma por uma para o ImgBB
+                for (let i = 0; i < totalFotos; i++) {
+                    status.innerText = `Enviando foto ${i + 1} de ${totalFotos}...`;
+                    const link = await subirParaImgBB(fotosArquivos[i]);
+                    listaDeLinks.push(link);
+                }
+
+                const novoProduto = {
+                    id: Date.now(), // ID para ordenação
+                    nome: document.getElementById('prodNome').value,
+                    categoria: document.getElementById('prodCategoria').value,
+                    descricao: document.getElementById('prodDescricao').value,
+                    fotos: listaDeLinks,
+                    foto: listaDeLinks[0], // Foto principal
+                    donoNome: usuarioLogado.nome,
+                    donoFoto: usuarioLogado.foto,
+                    donoEmail: usuarioLogado.email,
+                    donoEndereco: usuarioLogado.endereco || "Não informado",
+                    status: "ativo",
+                    dataCriacao: new Date().toISOString()
+                };
+
+                // SALVA NA NUVEM (Firestore)
+                btn.innerText = "Registrando anúncio...";
+                await db.collection('produtos').add(novoProduto);
+
+                alert("Anúncio publicado com sucesso em tempo real!");
+                window.location.href = 'index.html';
+
+            } catch (erro) {
+                console.error(erro);
+                alert("Erro ao publicar anúncio: " + erro.message);
+                btn.disabled = false;
+                btn.innerText = "Publicar no TROK";
+            }
+        });
+    </script>
+</body>
+</html>

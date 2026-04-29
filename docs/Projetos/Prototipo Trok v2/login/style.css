@@ -16,7 +16,7 @@ body {
    CABEÇALHO
    ========================================================================== */
 #cabecalho {
-    background-color: #blue;
+    background-color: #e96e28;
     display: flex;
     justify-content: space-between;
     align-items: center;

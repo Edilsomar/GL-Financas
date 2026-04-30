@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TROK - Chat</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body { display: flex; flex-direction: column; height: 100vh; margin: 0; background: #f0f2f5; }
+        
+        #cabecalho { display: flex; align-items: center; justify-content: space-between; padding: 10px 15px; flex-shrink: 0; }
+        .info-direita-header { display: flex; align-items: center; gap: 12px; }
+        .textos-header { display: flex; flex-direction: column; text-align: right; line-height: 1.2; }
+        .textos-header strong { font-size: 14px; color: white; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 150px; }
+        .textos-header span { font-size: 11px; color: #ffe6d5; }
+        .foto-item-header { width: 38px; height: 38px; border-radius: 8px; object-fit: cover; border: 1px solid rgba(255,255,255,0.5); display: none; }
+
+        /* NOVO: Botão Trok Realizado */
+        .area-acao-trok { background: white; padding: 8px 15px; border-bottom: 1px solid #ddd; display: none; justify-content: center; }
+        .btn-concluir-trok { background: #4CAF50; color: white; border: none; padding: 8px 20px; border-radius: 20px; font-weight: bold; cursor: pointer; font-size: 13px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+
+        .area-mensagens { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 12px; }
+        .linha-mensagem { display: flex; width: 100%; gap: 8px; margin-bottom: 5px; }
+        .linha-mensagem.minha { justify-content: flex-end; }
+        .linha-mensagem.outra { justify-content: flex-start; }
+        .foto-avatar-msg { width: 28px; height: 28px; border-radius: 50%; object-fit: cover; flex-shrink: 0; align-self: flex-end; }
+
+        .balao { max-width: 70%; padding: 12px 15px; border-radius: 18px; font-size: 15px; line-height: 1.4; word-wrap: break-word; box-shadow: 0 1px 2px rgba(0,0,0,0.1); }
+        .balao.minha { background: #e96e28; color: white; border-bottom-right-radius: 4px; }
+        .balao.outra { background: white; color: #333; border-bottom-left-radius: 4px; }
+        
+        .area-input { flex-shrink: 0; display: flex; gap: 10px; padding: 15px; background: white; border-top: 1px solid #ddd; }
+        .area-input input { flex: 1; padding: 15px; border-radius: 25px; border: 1px solid #ccc; outline: none; }
+        .area-input button { background: #e96e28; color: white; border: none; padding: 0 25px; border-radius: 25px; font-weight: bold; cursor: pointer; }
+
+        .btn-voltar {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            color: white;
+            font-weight: bold;
+            font-size: 14px;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 6px 14px;
+            border-radius: 20px;
+            transition: all 0.2s ease;
+            backdrop-filter: blur(5px);
+        }
+        .btn-voltar:hover {
+            background: rgba(255, 255, 255, 0.35);
+            transform: translateX(-3px);
+        }
+    </style>
+</head>
+<body>
+    <header id="cabecalho">
+        <a href="mensagens.html" class="btn-voltar">← Voltar</a>
+        <div class="info-direita-header">
+            <div class="textos-header">
+                <strong id="headerItemNome">Carregando...</strong>
+                <span id="headerNomeUser">Conectando...</span>
+            </div>
+            <img id="headerItemFoto" src="" class="foto-item-header">
+        </div>
+    </header>
+
+    <div class="area-acao-trok" id="areaTrokRealizado">
+        <button class="btn-concluir-trok" onclick="finalizarTrok()">✅ Trok Realizado</button>
+    </div>
+
+    <main class="area-mensagens" id="areaMensagens"></main>
+
+    <div class="area-input">
+        <input type="text" id="inputMensagem" placeholder="Digite sua mensagem...">
+        <button id="btnEnviarMsg">Enviar</button>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/10.11.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.11.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore-compat.js"></script>
+    <script src="firebase-init.js"></script>
+
+    <script>
+        const usuarioLogado = JSON.parse(localStorage.getItem('usuarioLogado'));
+        if (!usuarioLogado) window.location.href = 'login.html';
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const chatIdURL = urlParams.get('id'); 
+        const origem = urlParams.get('origem');
+        const donoEmail = urlParams.get('dono');
+        const emailURL = urlParams.get('email');
+        const itemDesejado = urlParams.get('item'); 
+        const idProdURL = urlParams.get('idProd'); 
+        
+        let chatIdAtual = "";
+        let outroEmailFinal = "";
+        let fotoDoOutroUsuario = "icones/usuário-black-50.png"; 
+        let tempoLimpeza = 0;
+        let idProdutoViculado = ""; // Guarda o ID do produto para atualizar depois
+
+        async function inicializarChat() {
+            if (origem === 'produto' && donoEmail && idProdURL) {
+                outroEmailFinal = donoEmail;
+                chatIdAtual = [usuarioLogado.email, donoEmail].sort().join('_') + '_' + idProdURL;
+                
+                await db.collection('chats').doc(chatIdAtual).set({ 
+                    participantes: [usuarioLogado.email, donoEmail], 
+                    dataAtualizacao: Date.now(),
+                    itemNome: itemDesejado,
+                    idProdutoDoc: idProdURL
+                }, { merge: true });
+            } else if (chatIdURL) {
+                chatIdAtual = chatIdURL;
+                outroEmailFinal = emailURL;
+            } else {
+                window.location.href = 'mensagens.html';
+                return;
+            }
+
+            localStorage.setItem('visto_' + chatIdAtual, Date.now());
+            localStorage.setItem('ultimaVezVistoMensagens', Date.now());
+
+            await carregarDadosOutroUsuario(outroEmailFinal);
+            await carregarDadosDoChat(); 
+            escutarMensagens();
+        }
+
+        async function carregarDadosOutroUsuario(email) {
+            try {
+                const snap = await db.collection('usuarios').where('email', '==', email).get();
+                if(!snap.empty) {
+                    const dados = snap.docs[0].data();
+                    document.getElementById('headerNomeUser').innerText = "com " + dados.nome;
+                    if(dados.foto) fotoDoOutroUsuario = dados.foto;
+                } else {
+                    document.getElementById('headerNomeUser').innerText = "com " + email.split('@')[0];
+                }
+            } catch(e) { }
+        }
+
+        async function carregarDadosDoChat() {
+            try {
+                const doc = await db.collection('chats').doc(chatIdAtual).get();
+                if(doc.exists) {
+                    const chatData = doc.data();
+                    document.getElementById('headerItemNome').innerText = chatData.itemNome || "Negociação";
+                    idProdutoViculado = chatData.idProdutoDoc;
+                    
+                    if(chatData.itemFoto) {
+                        const imgEl = document.getElementById('headerItemFoto');
+                        imgEl.src = chatData.itemFoto;
+                        imgEl.style.display = 'block';
+                    }
+
+                    // LÓGICA DO BOTÃO VERDE: Verifica se o usuário é o dono do produto
+                    if (idProdutoViculado) {
+                        const prodSnap = await db.collection('produtos').doc(idProdutoViculado).get();
+                        if (prodSnap.exists) {
+                            const p = prodSnap.data();
+                            // Só mostra o botão se eu for o dono E o produto ainda estiver ativo
+                            if (p.donoEmail === usuarioLogado.email && p.status === 'ativo') {
+                                document.getElementById('areaTrokRealizado').style.display = 'flex';
+                            }
+                        }
+                    }
+
+                    const chaveLimpeza = 'apagadoEm_' + usuarioLogado.uid;
+                    if (chatData[chaveLimpeza]) {
+                        tempoLimpeza = chatData[chaveLimpeza];
+                    }
+                }
+            } catch(e) { console.error(e); }
+        }
+
+        // Função do botão verde
+        async function finalizarTrok() {
+            if (confirm("Deseja marcar este Trok como realizado? O item sairá do feed e das buscas.")) {
+                try {
+                    await db.collection('produtos').doc(idProdutoViculado).update({
+                        status: "trocado"
+                    });
+                    document.getElementById('areaTrokRealizado').style.display = 'none';
+                    alert("Parabéns pelo Trok realizado! 🎉");
+                } catch(e) {
+                    alert("Erro ao finalizar Trok: " + e.message);
+                }
+            }
+        }
+
+        function escutarMensagens() {
+            db.collection('chats').doc(chatIdAtual).collection('mensagens').orderBy('data', 'asc').onSnapshot(snap => {
+                const area = document.getElementById('areaMensagens');
+                area.innerHTML = "";
+                let temMensagemValida = false;
+                
+                snap.forEach(doc => {
+                    const msg = doc.data();
+                    if (msg.data >= tempoLimpeza) {
+                        temMensagemValida = true;
+                        const souEu = msg.remetente === usuarioLogado.email;
+                        const classeLinha = souEu ? 'minha' : 'outra';
+                        const fotoAvatar = souEu ? (usuarioLogado.foto || 'icones/usuário-black-50.png') : fotoDoOutroUsuario;
+
+                        if (souEu) {
+                            area.innerHTML += `<div class="linha-mensagem minha"><div class="balao minha">${msg.texto}</div><img src="${fotoAvatar}" class="foto-avatar-msg"></div>`;
+                        } else {
+                            area.innerHTML += `<div class="linha-mensagem outra"><img src="${fotoAvatar}" class="foto-avatar-msg"><div class="balao outra">${msg.texto}</div></div>`;
+                        }
+                    }
+                });
+
+                if (!temMensagemValida) {
+                     area.innerHTML = `<p style='text-align:center;color:#999;margin-top:20px;'>Sem mensagens recentes.</p>`;
+                }
+                area.scrollTop = area.scrollHeight;
+                
+                localStorage.setItem('visto_' + chatIdAtual, Date.now());
+                localStorage.setItem('ultimaVezVistoMensagens', Date.now());
+            });
+        }
+
+        document.getElementById('btnEnviarMsg').onclick = async () => {
+            const input = document.getElementById('inputMensagem');
+            const texto = input.value.trim();
+            if (!texto) return;
+            input.value = ""; 
+            try {
+                await db.collection('chats').doc(chatIdAtual).collection('mensagens').add({ texto: texto, remetente: usuarioLogado.email, data: Date.now() });
+                await db.collection('chats').doc(chatIdAtual).update({ ultimoRemetente: usuarioLogado.email, dataAtualizacao: Date.now(), participantes: [usuarioLogado.email, outroEmailFinal] });
+                localStorage.setItem('visto_' + chatIdAtual, Date.now());
+            } catch(e) { }
+        };
+
+        document.getElementById('inputMensagem').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') document.getElementById('btnEnviarMsg').click();
+        });
+
+        inicializarChat();
+    </script>
+</body>
+</html>

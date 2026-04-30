@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trok - Acesso</title>
+    <link rel="stylesheet" href="login.css">
+</head>
+<body>
+    <div class="login-container">
+        <img src="img/logo_trok.png" alt="Logo Trok" class="logo-login">
+
+        <div id="tela-login">
+            <h2>Entrar no TROK</h2>
+            <form id="formLogin">
+                <div class="input-group">
+                    <label>E-mail</label>
+                    <input type="email" id="loginEmail" placeholder="seu@email.com" required>
+                </div>
+                <div class="input-group">
+                    <label>Senha</label>
+                    <input type="password" id="loginSenha" placeholder="Sua senha" required>
+                </div>
+                <button type="submit" class="btn-entrar">Entrar</button>
+            </form>
+            <div style="text-align: center; margin-top: 10px; margin-bottom: 15px;">
+                    <a href="#" id="btnEsqueciSenha" style="color: #e96e28; font-size: 14px; text-decoration: none;">Esqueci minha senha</a>
+            </div>
+        
+            <p class="trocar-tela">Não tem conta? <a href="#" id="irParaCadastro">Cadastre-se</a></p>
+        
+        </div>
+
+        <div id="tela-cadastro" style="display: none;">
+            <h2>Criar Conta</h2>
+            <form id="formCadastro">
+                <div class="input-group">
+                    <label>Nome Completo</label>
+                    <input type="text" id="cadNome" placeholder="Ex: Edilsomar Santos" required>
+                </div>
+                <div class="input-group">
+                    <label>Telefone</label>
+                    <input type="tel" id="cadTelefone" placeholder="(48) 99999-9999" required>
+                </div>
+                <div class="input-group">
+                    <label>Sua Foto de Perfil</label>
+                    <input type="file" id="cadFoto" accept="image/*" required>
+                    <small>Dê preferência a fotos leves e quadradas.</small>
+                </div>
+                <div class="input-group">
+                    <label>Cidade/Estado</label>
+                    <input type="text" id="cadEndereco" placeholder="Ex: Florianópolis - SC" required>
+                </div>
+                <div class="input-group">
+                    <label>E-mail</label>
+                    <input type="email" id="cadEmail" placeholder="exemplo@gmail.com" required>
+                </div>
+                <div class="input-group">
+                    <label>Senha</label>
+                    <input type="password" id="cadSenha" placeholder="Crie uma senha" required>
+                </div>
+                <button type="submit" class="btn-entrar">Finalizar Cadastro</button>
+            </form>
+            <p class="trocar-tela">Já tem conta? <a href="#" id="irParaLogin">Fazer Login</a></p>
+        </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/10.11.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.11.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore-compat.js"></script>
+
+    <script src="firebase-init.js"></script>
+
+    <script src="login.js"></script>
+</body>
+</html>
+</body>
+</html>

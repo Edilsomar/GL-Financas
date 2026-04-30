@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TROK - Anunciar Produto</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .container-cadastro { padding: 20px; max-width: 500px; margin: 0 auto; }
+        .form-grupo { margin-bottom: 20px; text-align: left; }
+        .form-grupo label { display: block; margin-bottom: 8px; font-weight: bold; color: #444; }
+        .form-grupo input, .form-grupo textarea, .form-grupo select { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 8px; font-size: 16px; font-family: sans-serif; }
+        .btn-anunciar { width: 100%; background-color: #e96e28; color: white; padding: 15px; border: none; border-radius: 8px; font-size: 1.1rem; font-weight: bold; cursor: pointer; transition: 0.3s; }
+        .btn-anunciar:disabled { background-color: #ccc; cursor: not-allowed; }
+        #camposLeilao { display: none; background: #fff8f4; padding: 15px; border-radius: 10px; border: 1px dashed #e96e28; margin-bottom: 20px; }
+        .badge-doacao { background: #4CAF50; color: white; padding: 10px; border-radius: 5px; font-size: 14px; display: none; margin-bottom: 15px; text-align: center; }
+
+        /* NOVO BOTÃO DE VOLTAR ESTILIZADO (Padrão Premium) */
+        .btn-voltar {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            color: white;
+            font-weight: bold;
+            font-size: 14px;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 6px 14px;
+            border-radius: 20px;
+            transition: all 0.2s ease;
+            backdrop-filter: blur(5px);
+        }
+        .btn-voltar:hover {
+            background: rgba(255, 255, 255, 0.35);
+            transform: translateX(-3px);
+        }
+    </style>
+</head>
+<body>
+    <header id="cabecalho">
+        <a href="index.html" class="btn-voltar">← Voltar</a>
+        <h2>Anunciar</h2>
+        <div style="width: 50px;"></div>
+    </header>
+
+    <main class="container-cadastro">
+        <form id="formProduto">
+            <div class="form-grupo">
+                <label>O que deseja fazer?</label>
+                <select id="tipoNegocio" required onchange="ajustarFormulario(this.value)">
+                    <option value="Troca" selected>🔄 Troca Comum</option>
+                    <option value="Leilão">🔥 Leilão (Tempo Limite)</option>
+                    <option value="Doação">🎁 Doação (Desapego)</option>
+                    <option value="Serviço">💼 Serviço (Ofereço meu trabalho)</option>
+                </select>
+            </div>
+
+            <div id="msgDoacao" class="badge-doacao">Este item será anunciado como presente! 💚</div>
+
+            <div class="form-grupo">
+                <label>Título do Anúncio</label>
+                <input type="text" id="prodNome" placeholder="Ex: Controle de PS4 ou Formatação de PC" required>
+            </div>
+
+            <div class="form-grupo">
+                <label>Categoria</label>
+                <select id="prodCategoria" required>
+                    <option value="" disabled selected>Selecione uma categoria</option>
+                    <option value="Eletrônicos & Informática">Eletrônicos & Informática</option>
+                    <option value="Games">Games</option>
+                    <option value="Veículos & Peças">Veículos & Peças</option>
+                    <option value="Moda & Vestuário">Moda & Vestuário</option>
+                    <option value="Casa & Móveis">Casa & Móveis</option>
+                    <option value="Esportes">Esportes</option>
+                    <option value="Ferramentas">Ferramentas</option>
+                    <option value="Livros & Estudo">Livros & Estudo</option>
+                    <option value="Serviços Gerais">Serviços Gerais</option>
+                    <option value="Outros">Outros</option>
+                </select>
+            </div>
+
+            <div id="camposLeilao">
+                <div class="form-grupo">
+                    <label>Sua Wishlist (O que aceitaria receber?)</label>
+                    <input type="text" id="prodWishlist" placeholder="Ex: iPhone, PS5, Jogos...">
+                </div>
+                <div class="form-grupo">
+                    <label>Duração do Leilão</label>
+                    <select id="prodTempo">
+                        <option value="24">24 Horas</option>
+                        <option value="48">48 Horas</option>
+                        <option value="72">72 Horas</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-grupo">
+                <label id="labelDesc">Descrição</label>
+                <textarea id="prodDescricao" rows="4" placeholder="Detalhes sobre o estado do produto ou como funciona seu serviço..." required></textarea>
+            </div>
+
+            <div class="form-grupo">
+                <label>Fotos (Até 3)</label>
+                <input type="file" id="prodFoto" accept="image/*" multiple required>
+            </div>
+
+            <button type="submit" id="btnPublicar" class="btn-anunciar">Publicar no TROK</button>
+        </form>
+    </main>
+
+    <script src="https://www.gstatic.com/firebasejs/10.11.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.11.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore-compat.js"></script>
+    <script src="firebase-init.js"></script>
+
+    <script>
+        const IMGBB_API_KEY = 'e78808d57f0cf6f6fabe4a68aec3890f';
+
+        function ajustarFormulario(tipo) {
+            const painelLeilao = document.getElementById('camposLeilao');
+            const msgDoacao = document.getElementById('msgDoacao');
+            const labelDesc = document.getElementById('labelDesc');
+
+            painelLeilao.style.display = 'none';
+            msgDoacao.style.display = 'none';
+            labelDesc.innerText = "Descrição";
+
+            if (tipo === "Leilão") {
+                painelLeilao.style.display = 'block';
+                labelDesc.innerText = "Regras/Observações do Leilão";
+            } else if (tipo === "Doação") {
+                msgDoacao.style.display = 'block';
+                labelDesc.innerText = "Motivo da doação ou detalhes";
+            } else if (tipo === "Serviço") {
+                labelDesc.innerText = "Detalhes do Serviço";
+            }
+        }
+
+        async function subirParaImgBB(arquivo) {
+            const formData = new FormData(); formData.append('image', arquivo);
+            const res = await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`, { method: 'POST', body: formData });
+            const dados = await res.json(); return dados.data.url;
+        }
+
+        document.getElementById('formProduto').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const usuarioLogado = JSON.parse(localStorage.getItem('usuarioLogado'));
+            if (!usuarioLogado) return alert("Sessão expirada.");
+            const btn = document.getElementById('btnPublicar');
+            btn.disabled = true; btn.innerText = "Subindo fotos...";
+            const fotosArquivos = document.getElementById('prodFoto').files;
+            const listaDeLinks = [];
+
+            try {
+                for (let i = 0; i < Math.min(fotosArquivos.length, 3); i++) {
+                    const link = await subirParaImgBB(fotosArquivos[i]);
+                    listaDeLinks.push(link);
+                }
+                const tipo = document.getElementById('tipoNegocio').value;
+                const tempoHoras = parseInt(document.getElementById('prodTempo').value) || 0;
+
+                await db.collection('produtos').add({
+                    id: Date.now(),
+                    nome: document.getElementById('prodNome').value,
+                    tipoNegocio: tipo,
+                    categoria: document.getElementById('prodCategoria').value,
+                    descricao: document.getElementById('prodDescricao').value,
+                    wishlist: tipo === "Leilão" ? document.getElementById('prodWishlist').value : "",
+                    tempoLimite: tipo === "Leilão" ? Date.now() + (tempoHoras * 60 * 60 * 1000) : null,
+                    fotos: listaDeLinks, foto: listaDeLinks[0],
+                    donoNome: usuarioLogado.nome, donoFoto: usuarioLogado.foto, donoEmail: usuarioLogado.email, donoEndereco: usuarioLogado.endereco || "Não informado",
+                    status: "ativo", dataCriacao: new Date().toISOString()
+                });
+                alert("Anúncio publicado!"); window.location.href = 'index.html';
+            } catch (erro) { alert("Erro: " + erro.message); btn.disabled = false; btn.innerText = "Publicar no TROK"; }
+        });
+    </script>
+</body>
+</html>

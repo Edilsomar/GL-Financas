@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TROK - Detalhes</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .container-produto { padding: 15px; max-width: 600px; margin: 0 auto; padding-bottom: 120px; }
+        .foto-principal-display { width: 100%; height: 350px; background: #fdfdfd; border-radius: 12px; display: flex; align-items: center; justify-content: center; overflow: hidden; margin-bottom: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); border: 1px solid #eee; }
+        .foto-principal-display img { width: 100%; height: 100%; object-fit: contain; }
+        .info-produto { background: #fff; padding: 20px; border-radius: 12px; border: 1px solid #ddd; margin-bottom: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.03); }
+        .info-produto h2 { margin: 0 0 10px 0; color: #333; }
+        .info-produto p { color: #555; line-height: 1.5; font-size: 15px; }
+        .painel-leilao { background: #fff8f4; border: 2px solid #e96e28; padding: 15px; border-radius: 10px; margin-bottom: 15px; text-align: center; }
+        .timer-regressivo { font-size: 24px; font-weight: bold; color: #ff0000; font-family: monospace; }
+        .live-lances { background: #f9f9f9; padding: 15px; border-radius: 12px; max-height: 400px; overflow-y: auto; border: 1px solid #ddd; }
+        .item-lance-live { background: white; padding: 15px; border-radius: 12px; margin-bottom: 10px; border-left: 5px solid #e96e28; box-shadow: 0 2px 5px rgba(0,0,0,0.05); animation: subir 0.3s ease; }
+        @keyframes subir { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .fotos-lance-grid { display: flex; gap: 8px; margin-top: 10px; overflow-x: auto; padding-bottom: 5px; }
+        .fotos-lance-grid img { width: 70px; height: 70px; border-radius: 8px; object-fit: cover; border: 1px solid #eee; }
+        #modalLance { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 5000; align-items: center; justify-content: center; }
+        .modal-conteudo { background: white; width: 90%; max-width: 400px; padding: 25px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .grid-upload { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 15px 0; }
+        .upload-box { height: 100px; background: #f0f0f0; border: 2px dashed #ccc; border-radius: 10px; display: flex; align-items: center; justify-content: center; cursor: pointer; overflow: hidden; position: relative; }
+        .upload-box img { width: 100%; height: 100%; object-fit: cover; display: none; position: absolute; top: 0; left: 0; z-index: 2; }
+        .upload-box img.ativo { display: block; }
+        .upload-box span { font-size: 24px; color: #999; z-index: 1; }
+        .btn-acao { width: 100%; background: #e96e28; color: #fff; padding: 15px; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; font-size: 16px; transition: 0.2s; }
+        .btn-acao:active { transform: scale(0.98); }
+
+        .btn-voltar {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            color: white;
+            font-weight: bold;
+            font-size: 14px;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 6px 14px;
+            border-radius: 20px;
+            transition: all 0.2s ease;
+            backdrop-filter: blur(5px);
+        }
+        .btn-voltar:hover {
+            background: rgba(255, 255, 255, 0.35);
+            transform: translateX(-3px);
+        }
+    </style>
+</head>
+<body>
+    <header id="cabecalho">
+        <a href="index.html" class="btn-voltar">← Voltar</a>
+        <h2 id="tituloTopo">Detalhes</h2>
+        <div style="width: 50px;"></div>
+    </header>
+
+    <main class="container-produto" id="conteudoProduto">
+        <div style="text-align: center; margin-top: 50px;">Carregando...</div>
+    </main>
+
+    <!-- Modal de Lance -->
+    <div id="modalLance">
+        <div class="modal-conteudo">
+            <h3 style="color: #e96e28; margin-top: 0;">Dar Lance 🔥</h3>
+            <textarea id="descLance" placeholder="O que você oferece em troca? Descreva bem..." rows="3" style="width:100%; margin-top:10px; padding:10px; border-radius:8px; border:1px solid #ddd; font-family: sans-serif; resize: none;"></textarea>
+            <p style="font-size: 12px; color: #666; margin-top: 10px; margin-bottom: 5px;">Adicione até 3 fotos do seu item:</p>
+            <div class="grid-upload">
+                <div class="upload-box" onclick="document.getElementById('img1').click()"><img id="pre1"><span id="plus1">+</span><input type="file" id="img1" hidden accept="image/*" onchange="previewLance(this, 'pre1', 'plus1')"></div>
+                <div class="upload-box" onclick="document.getElementById('img2').click()"><img id="pre2"><span id="plus2">+</span><input type="file" id="img2" hidden accept="image/*" onchange="previewLance(this, 'pre2', 'plus2')"></div>
+                <div class="upload-box" onclick="document.getElementById('img3').click()"><img id="pre3"><span id="plus3">+</span><input type="file" id="img3" hidden accept="image/*" onchange="previewLance(this, 'pre3', 'plus3')"></div>
+            </div>
+            <button class="btn-acao" id="btnEnviarLance">Enviar Oferta</button>
+            <button onclick="document.getElementById('modalLance').style.display='none'" style="width:100%; background:none; border:none; color:#999; margin-top:15px; cursor:pointer; font-weight:bold;">Cancelar</button>
+        </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/10.11.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.11.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore-compat.js"></script>
+    <script src="firebase-init.js"></script>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const produtoIdURL = Number(urlParams.get('id'));
+        const IMGBB_API_KEY = 'e78808d57f0cf6f6fabe4a68aec3890f';
+        let idDocOriginal = "";
+
+        async function carregar() {
+            const snap = await db.collection('produtos').where('id', '==', produtoIdURL).get();
+            if (snap.empty) return window.location.href='index.html';
+            const doc = snap.docs[0]; const p = doc.data(); idDocOriginal = doc.id;
+            const user = JSON.parse(localStorage.getItem('usuarioLogado')) || {};
+
+            // ATUALIZADO: Botão do Serviço
+            let textoBotao = "Iniciar Troca";
+            if (p.tipoNegocio === "Leilão") textoBotao = "Dar Lance 🔥";
+            if (p.tipoNegocio === "Doação") textoBotao = "Quero Presente 🎁";
+            if (p.tipoNegocio === "Serviço") textoBotao = "Contratar Serviço 💼";
+
+            let botoesHTML = user.email === p.donoEmail 
+                ? '<button class="btn-acao" style="background:#999" disabled>Este anúncio é seu</button>' 
+                : `<button class="btn-acao" onclick="acaoPrincipal('${p.tipoNegocio}', '${p.donoEmail}', '${p.nome.replace(/'/g, "\\'")}', '${p.foto}', '${idDocOriginal}')">${textoBotao}</button>`;
+
+            let leilaoHTML = "";
+            if(p.tipoNegocio === "Leilão") {
+                leilaoHTML = `
+                    <div class="painel-leilao">
+                        <div style="font-size: 12px; font-weight: bold; color: #e96e28; margin-bottom: 5px;">TEMPO RESTANTE</div>
+                        <div class="timer-regressivo" id="timerRelogio">00:00:00</div>
+                        <div style="font-size: 13px; margin-top: 10px; color: #444;"><strong>💡 Wishlist:</strong> ${p.wishlist || 'O dono aceita propostas livres'}</div>
+                    </div>
+                    <h3 style="margin: 20px 0 10px 0; color: #333;">Ofertas ao Vivo 🔴</h3>
+                    <div class="live-lances" id="feedLances"><p style="text-align:center; color:#999; font-size:13px; padding:20px;">Carregando lances...</p></div>
+                `;
+                iniciarTimer(p.tempoLimite);
+                escutarLances(idDocOriginal, user.email === p.donoEmail, p.nome, p.foto);
+            }
+
+            document.getElementById('conteudoProduto').innerHTML = `
+                <div class="foto-principal-display"><img src="${p.foto}"></div>
+                <div class="info-produto">
+                    <h2>${p.nome}</h2>
+                    <p>${p.descricao}</p>
+                    <hr style="margin:20px 0; border:0; border-top:1px solid #eee;">
+                    ${p.tipoNegocio !== "Leilão" ? botoesHTML : ''} 
+                </div>
+                ${leilaoHTML}
+                ${p.tipoNegocio === "Leilão" && user.email !== p.donoEmail ? `<div style="margin-top:20px;">${botoesHTML}</div>` : ''}
+            `;
+        }
+
+        async function acaoPrincipal(tipoNegocio, donoEmail, nomeProduto, fotoProduto, idProd) {
+            if (tipoNegocio === "Leilão") {
+                document.getElementById('modalLance').style.display = 'flex';
+            } else {
+                // Troca, Doação e Serviço caem aqui e abrem o Chat
+                const user = JSON.parse(localStorage.getItem('usuarioLogado'));
+                const chatId = [user.email, donoEmail].sort().join('_') + '_' + idProd;
+                
+                await db.collection('chats').doc(chatId).set({
+                    participantes: [user.email, donoEmail],
+                    dataAtualizacao: Date.now(),
+                    itemFoto: fotoProduto, 
+                    itemNome: nomeProduto,
+                    idProdutoDoc: idProd 
+                }, { merge: true });
+
+                window.location.href = `chat.html?origem=produto&dono=${donoEmail}&item=${nomeProduto}&idProd=${idProd}`;
+            }
+        }
+
+        function iniciarTimer(limite) {
+            setInterval(() => {
+                const r = limite - Date.now();
+                if(r <= 0) return document.getElementById('timerRelogio').innerText = "ENCERRADO";
+                const h = Math.floor(r/3600000), m = Math.floor((r%3600000)/60000), s = Math.floor((r%60000)/1000);
+                document.getElementById('timerRelogio').innerText = `${h.toString().padStart(2,'0')}:${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
+            }, 1000);
+        }
+
+        function escutarLances(idProd, souDono, nomeProduto, fotoProduto) {
+            db.collection('lances_leilao').where('idProdutoDoc', '==', idProd).onSnapshot(snap => {
+                const feed = document.getElementById('feedLances');
+                if(!feed) return;
+                if(snap.empty) { feed.innerHTML = "<p style='text-align:center;color:#999;font-size:14px;padding:20px;'>Nenhum lance recebido ainda.<br>Seja o primeiro!</p>"; return; }
+                feed.innerHTML = "";
+                let listaLances = [];
+                snap.forEach(d => listaLances.push(d.data()));
+                listaLances.sort((a, b) => b.data - a.data);
+
+                listaLances.forEach(l => {
+                    const nomeProdSeguro = nomeProduto.replace(/'/g, "\\'");
+                    feed.innerHTML += `
+                        <div class="item-lance-live">
+                            <div style="display:flex; align-items:center; gap:10px; margin-bottom:8px;">
+                                <div style="width:30px; height:30px; background:#e96e28; border-radius:50%; display:flex; align-items:center; justify-content:center; color:white; font-size:12px; font-weight:bold;">${l.userNome ? l.userNome[0].toUpperCase() : 'U'}</div>
+                                <strong style="font-size: 15px; color: #333;">${l.userNome || 'Usuário'}</strong>
+                            </div>
+                            <p style="font-size:14px; color:#555; margin-bottom:10px;">${l.descricao || 'Sem descrição'}</p>
+                            <div class="fotos-lance-grid">${(l.fotos || []).map(f => `<img src="${f}" onclick="window.open('${f}')">`).join('')}</div>
+                            ${souDono ? `<button onclick="baterMartelo('${idProd}', '${l.userEmail}', '${nomeProdSeguro}', '${fotoProduto}')" style="width:100%; background:#4CAF50; color:white; border:none; padding:12px; margin-top:12px; border-radius:8px; font-weight:bold; cursor:pointer; font-size:14px;">ACEITAR OFERTA 🔨</button>` : ''}
+                        </div>`;
+                });
+            });
+        }
+
+        function previewLance(input, imgId, plusId) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = e => {
+                    const img = document.getElementById(imgId);
+                    img.src = e.target.result; img.classList.add('ativo');
+                    document.getElementById(plusId).style.display = 'none';
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        document.getElementById('btnEnviarLance').onclick = async () => {
+            const user = JSON.parse(localStorage.getItem('usuarioLogado'));
+            if(!user) return alert("Você precisa estar logado!");
+            const arquivos = [document.getElementById('img1').files[0], document.getElementById('img2').files[0], document.getElementById('img3').files[0]].filter(f => f);
+            if(arquivos.length === 0) return alert("Por favor, adicione pelo menos uma foto do seu item.");
+            const btn = document.getElementById('btnEnviarLance');
+            btn.disabled = true; btn.innerText = "Enviando para o leilão...";
+
+            try {
+                const links = [];
+                for(let f of arquivos) {
+                    const fd = new FormData(); fd.append('image', f);
+                    const r = await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`, { method:'POST', body:fd });
+                    const j = await r.json(); if(j.data) links.push(j.data.url);
+                }
+                await db.collection('lances_leilao').add({ idProdutoDoc: idDocOriginal, userNome: user.nome, userEmail: user.email, descricao: document.getElementById('descLance').value, fotos: links, data: Date.now() });
+                alert("Boa sorte! Seu lance já está no ar.");
+                document.getElementById('modalLance').style.display = 'none';
+                document.getElementById('descLance').value = "";
+                [1,2,3].forEach(i => {
+                    const img = document.getElementById('pre'+i); if (img) { img.src = ""; img.classList.remove('ativo'); }
+                    const plus = document.getElementById('plus'+i); if (plus) plus.style.display = 'block';
+                });
+            } catch (e) { alert("Erro ao enviar oferta. Verifique a internet."); }
+            btn.disabled = false; btn.innerText = "Enviar Oferta";
+        };
+
+        async function baterMartelo(idProd, emailVencedor, nomeProduto, fotoProduto) {
+            if(confirm("Bater o martelo? O leilão será encerrado e iniciaremos um chat com o vencedor.")) {
+                try {
+                    const user = JSON.parse(localStorage.getItem('usuarioLogado'));
+                    await db.collection('produtos').doc(idProd).update({ status: "trocado", vencedor: emailVencedor });
+                    
+                    const chatId = [user.email, emailVencedor].sort().join('_') + '_' + idProd;
+                    const chatRef = db.collection('chats').doc(chatId);
+                    
+                    await chatRef.set({
+                        participantes: [user.email, emailVencedor],
+                        dataAtualizacao: Date.now(),
+                        ultimoRemetente: user.email,
+                        itemFoto: fotoProduto, 
+                        itemNome: nomeProduto,
+                        idProdutoDoc: idProd 
+                    }, {merge: true});
+
+                    await chatRef.collection('mensagens').add({
+                        texto: `🎉 Olá! Eu bati o martelo na sua oferta no leilão do item "${nomeProduto}". Parabéns! Vamos combinar a troca?`,
+                        remetente: user.email,
+                        data: Date.now()
+                    });
+
+                    alert("Martelo batido! Redirecionando para o chat...");
+                    window.location.href = "mensagens.html";
+
+                } catch(e) { alert("Erro ao finalizar o leilão: " + e.message); }
+            }
+        }
+
+        carregar();
+    </script>
+</body>
+</html>

@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TROK - Início</title>
+    <link rel="shortcut icon" href="img/logo_trok.png" type="image/x-icon">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .modal-edit { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 95%; max-width: 450px; background: white; padding: 20px; border-radius: 15px; z-index: 3000; box-shadow: 0 0 30px rgba(0,0,0,0.4); max-height: 90vh; overflow-y: auto; }
+        .modal-edit h2 { color: #e96e28; margin-bottom: 15px; text-align: center; }
+        .modal-edit input, .modal-edit textarea { width: 100%; padding: 12px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 8px; font-family: inherit; }
+        .grid-fotos-edit { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 15px; }
+        .item-foto-edit { position: relative; width: 100%; aspect-ratio: 1/1; background: #f5f5f5; border: 2px dashed #ccc; border-radius: 8px; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+        .item-foto-edit img { width: 100%; height: 100%; object-fit: cover; }
+        .btn-remover-foto { position: absolute; top: 2px; right: 2px; background: rgba(255,0,0,0.8); color: white; border: none; border-radius: 50%; width: 20px; height: 20px; font-size: 12px; cursor: pointer; z-index: 5; }
+        .btn-add-foto { width: 100%; height: 100%; background: none; border: none; font-size: 24px; color: #999; cursor: pointer; }
+        .btn-salvar { background: #e96e28; color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer; font-weight: bold; width: 100%; font-size: 16px; }
+        .btn-cancelar { background: #eee; color: #333; border: none; padding: 10px; border-radius: 8px; cursor: pointer; width: 100%; margin-top: 8px; }
+    </style>
+</head>
+<body>
+    <header id="cabecalho">
+        <img id="btnMenu" src="icones/menu-50.png" alt="Menu">
+        <h2>TROK</h2>
+        <img id="logo" src="img/logo_trok.png" alt="Logo">
+    </header>
+
+    <div id="container-busca" style="display: none; padding: 10px; background: #fff; border-bottom: 2px solid #e96e28;">
+        <input type="text" id="campoBusca" placeholder="🔍 O que você procura?" style="width: 100%; padding: 10px; border-radius: 20px; border: 1px solid #ddd; outline: none;">
+    </div>
+
+    <div class="overlay" id="overlay"></div>
+
+    <nav id="menuLateral">
+        <div class="menu-header">
+            <img src="" class="foto-perfil" id="fotoPerfilMenu">
+            <div class="user-info">
+                <strong id="nomeUsuarioMenu">...</strong>
+                <span id="enderecoUsuarioMenu">...</span>
+            </div>
+        </div>
+        <ul class="menu-lista">
+            <li onclick="location.reload()">🏠 Ver Tudo</li>
+            <li onclick="mostrarMeusAnuncios()">📦 Meus Anúncios</li>
+            <li onclick="mostrarFavoritos()">❤️ Favoritos</li>
+            <li class="separador">Tipos de Negócio:</li>
+            <li onclick="renderizarProdutos('Troca'); fecharTudo();">🔄 Trocas</li>
+            <li onclick="renderizarProdutos('Leilão'); fecharTudo();">🔥 Leilões</li>
+            <li onclick="renderizarProdutos('Doação'); fecharTudo();">🎁 Doações</li>
+            <li onclick="renderizarProdutos('Serviço'); fecharTudo();">💼 Serviços</li>
+            
+            <li class="separador">Categorias:</li>
+            <li class="cat-item">Eletrônicos & Informática</li>
+            <li class="cat-item">Games</li>
+            <li class="cat-item">Veículos & Peças</li>
+            <li class="cat-item">Moda & Vestuário</li>
+            <li class="cat-item">Casa & Móveis</li>
+            <li class="cat-item">Esportes</li>
+            <li class="cat-item">Ferramentas</li>
+            <li class="cat-item">Livros & Estudo</li>
+            <li class="cat-item">Serviços Gerais</li>
+            <li class="cat-item">Outros</li>
+            <hr>
+            <li class="sair" id="btnSair">Sair</li>
+        </ul>
+    </nav>
+
+    <main><div id="feed-produtos"></div></main>
+
+    <footer>
+        <img class="icone_footer" src="icones/home-black-50.png" onclick="location.reload()">
+        <img class="icone_footer" id="btnBuscaFooter" src="icones/pesquisar-black-50.png">
+        <img class="icone_plus_footer" id="btnAdicionar" src="icones/plus-50.png">
+        <div id="btnChatFooter" style="position: relative; display: flex; align-items: center; justify-content: center; cursor: pointer;">
+            <img class="icone_footer" src="icones/chat-black-50.png" style="margin: 0;">
+            <div id="dotNotificacao" style="display: none; position: absolute; top: -5px; right: -2px; width: 12px; height: 12px; background-color: #e96e28; border: 2px solid white; border-radius: 50%; z-index: 100;"></div>
+        </div>
+        <img class="icone_footer" id="btnPerfilFooter" src="icones/usuário-black-50.png">
+    </footer>
+
+    <div id="overlayPerfil" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:1999;" onclick="fecharTudo()"></div>
+    
+    <div id="menuPerfil" class="menu-perfil-container">
+        <div class="header-perfil">
+            <img id="fotoPerfilOpcoes" src="">
+            <h3 id="nomePerfilOpcoes">...</h3>
+        </div>
+        <ul class="lista-opcoes">
+            <li onclick="abrirModalUsuario()">✏️ Editar Meu Perfil</li>
+            <li onclick="mostrarMeusAnuncios()">📦 Meus Anúncios</li>
+            <li onclick="mostrarFavoritos()">❤️ Meus Favoritos</li>
+            <li style="color:red; border-top: 1px dashed #ddd; margin-top: 10px;">⚠️ Excluir Conta</li>
+        </ul>
+        <button class="btn-fechar-perfil" onclick="fecharMenuPerfil()">Voltar</button>
+    </div>
+
+    <div id="modalEditarUsuario" class="modal-edit">
+        <h2>Meu Perfil</h2>
+        <div style="text-align:center; margin-bottom:15px;">
+            <label for="inFotoP" style="cursor:pointer;">
+                <img id="preFotoP" src="" style="width:100px; height:100px; border-radius:50%; object-fit:cover; border:3px solid #e96e28;">
+                <p style="font-size:11px; color:#e96e28;">Trocar Foto</p>
+            </label>
+            <input type="file" id="inFotoP" style="display:none;" accept="image/*" onchange="previewImagem(this, 'preFotoP')">
+        </div>
+        <input type="text" id="edNomeU" placeholder="Nome">
+        <input type="text" id="edTelU" placeholder="WhatsApp">
+        <input type="text" id="edEndU" placeholder="Endereço">
+        <button class="btn-salvar" onclick="salvarPerfil()">Salvar Alterações</button>
+        <button class="btn-cancelar" onclick="fecharModaisEdicao()">Cancelar</button>
+    </div>
+
+    <div id="modalEditarAnuncio" class="modal-edit">
+        <h2>Editar Anúncio</h2>
+        <input type="hidden" id="edAnunId">
+        <input type="text" id="edAnunNome" placeholder="Título">
+        <textarea id="edAnunDesc" rows="3" placeholder="Descrição"></textarea>
+        <p style="font-size:12px; font-weight:bold; margin-bottom:5px;">Fotos (até 3):</p>
+        <div class="grid-fotos-edit" id="gridFotosEdit"></div>
+        <input type="file" id="inAddFotoAnun" style="display:none;" accept="image/*" onchange="addFotoAoAnuncio(this)">
+        <button class="btn-salvar" onclick="salvarEdicaoAnuncio()">Atualizar Anúncio</button>
+        <button class="btn-cancelar" onclick="fecharModaisEdicao()">Cancelar</button>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/10.11.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.11.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore-compat.js"></script>
+    <script src="firebase-init.js"></script>
+    <script src="abrirMenu.js"></script>
+</body>
+</html>

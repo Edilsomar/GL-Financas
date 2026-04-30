@@ -1,0 +1,99 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+body {
+    background-color: #d1d1d1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+.login-container {
+    background-color: #fff;
+    padding: 25px;
+    border-radius: 15px;
+    box-shadow: 0px 10px 25px rgba(0,0,0,0.2);
+    width: 100%;
+    max-width: 380px;
+    text-align: center;
+}
+
+.logo-login {
+    width: 70px;
+    margin-bottom: 10px;
+}
+
+h2 {
+    color: #e96e28;
+    margin-bottom: 20px;
+}
+
+.input-group {
+    text-align: left;
+    margin-bottom: 15px;
+}
+
+.input-group label {
+    display: block;
+    font-size: 13px;
+    margin-bottom: 5px;
+    color: #444;
+    font-weight: bold;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    outline-color: #e96e28;
+    font-size: 14px;
+}
+
+/* Estilo específico para o campo de arquivo */
+input[type="file"] {
+    padding: 5px 0;
+    border: none;
+}
+
+small {
+    display: block;
+    font-size: 11px;
+    color: #999;
+    margin-top: 2px;
+}
+
+.btn-entrar {
+    width: 100%;
+    padding: 14px;
+    background-color: #e96e28;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+    margin-top: 10px;
+}
+
+.btn-entrar:hover {
+    background-color: #d15d1f;
+}
+
+.trocar-tela {
+    margin-top: 20px;
+    font-size: 14px;
+}
+
+.trocar-tela a {
+    color: #e96e28;
+    text-decoration: none;
+    font-weight: bold;
+}
